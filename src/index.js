@@ -8,31 +8,75 @@ const infoOfCountry = document.querySelector('.country-info');
 
 const DEBOUNCE_DELAY = 300;
 
-// let nameCoumtry = undefined;
+let name = '';
 
-input.addEventListener('input', debounce(inputNameCountry, 300));
+input.addEventListener('input', debounce(inputNameCountry, DEBOUNCE_DELAY));
 
-function inputNameCountry() {
-  let name = '';
-  name = input.value.trim();
+function inputNameCountry(e) {
+  name = e.target.value.trim();
+  infoOfCountry.innerHTML = '';
+  countryList.innerHTML = '';
 
-  fetchCountries(name)
-    .then(counties => {
-      console.log(counties);
-    })
-    .catch(() =>
-      Notiflix.Notify.failure('"Oops, there is no country with that name"')
+  if (name.length === 0) return;
+
+  fetchCountries(name).then(countingTheNumberOfCountries).catch(showFetchError);
+}
+
+function countingTheNumberOfCountries(arr) {
+  if (arr.length === 1) {
+    renderCountryInfo(arr);
+    console.log('Объект имеет длину равную 1');
+  } else if (arr.length > 1 && arr.length <= 10) {
+    renderCountriesList(arr);
+  } else {
+    Notiflix.Notify.info(
+      'Too many matches found. Please enter a more specific name.'
     );
+  }
+}
+
+function renderCountriesList(arr) {
+  console.log(arr);
+  const murkup = arr
+    .map(el => {
+      const { flags, name } = el;
+      return `<li>
+        <img src="${flags.svg}" alt="${flags.alt}" width="50">
+        <p>${name.official}</p>
+      </li>`;
+    })
+    .join('');
+  countryList.innerHTML = murkup;
+}
+
+function renderCountryInfo(arr) {
+  const [{ capital, flags, name, languages, population }] = arr;
+
+  const murkup = `<div>
+        <img src="${flags.svg}" alt="${flags.alt}" width="50">
+        <p>${name.official}</p>
+      </div>
+      <p><b>Capital</b>: ${capital.join('')}</p>
+      <p><b>Population</b>: ${population}</p>
+      <p><b>Languages</b>: ${Object.values(languages).join(', ')}</p>
+    </div>`;
+
+  infoOfCountry.innerHTML = murkup;
+}
+
+function showFetchError(message) {
+  Notiflix.Notify.failure(`${message}`);
 }
 
 function fetchCountries(name) {
-  const BASE_URL = 'https://restcountries.com/v2';
+  const BASE_URL = 'https://restcountries.com/v3.1';
 
   return fetch(
     `${BASE_URL}/name/${name}?fields=name,capital,population,flags,languages`
   ).then(responce => {
     if (!responce.ok) {
-      throw new Error(responce.status);
+      console.log(responce);
+      throw new Error('Oops, there is no country with that name.');
     }
     return responce.json();
   });
