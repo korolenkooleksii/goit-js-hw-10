@@ -25,7 +25,6 @@ function inputNameCountry(e) {
 function countingTheNumberOfCountries(arr) {
   if (arr.length === 1) {
     renderCountryInfo(arr);
-    console.log('Объект имеет длину равную 1');
   } else if (arr.length > 1 && arr.length <= 10) {
     renderCountriesList(arr);
   } else {
@@ -36,7 +35,6 @@ function countingTheNumberOfCountries(arr) {
 }
 
 function renderCountriesList(arr) {
-  console.log(arr);
   const murkup = arr
     .map(el => {
       const { flags, name } = el;
