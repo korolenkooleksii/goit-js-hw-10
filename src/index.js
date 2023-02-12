@@ -1,23 +1,28 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
-import getRefs from "./refs";
-import API from "./fetchCountries";
+import getRefs from './refs';
+import API from './fetchCountries';
 
 const refs = getRefs();
 const DEBOUNCE_DELAY = 300;
 
-refs.input.addEventListener('input', debounce(inputNameCountry, DEBOUNCE_DELAY));
+refs.input.addEventListener(
+  'input',
+  debounce(inputNameCountry, DEBOUNCE_DELAY)
+);
 
 function inputNameCountry(e) {
   let name = '';
   name = e.target.value.trim();
-  refs.infoOfCountry.innerHTML = '';
-  refs.countryList.innerHTML = '';
+  // refs.infoOfCountry.innerHTML = '';
+  // refs.countryList.innerHTML = '';
 
   if (name.length === 0) return;
 
-  API.fetchCountries(name).then(countingTheNumberOfCountries).catch(showFetchError);
+  API.fetchCountries(name)
+    .then(countingTheNumberOfCountries)
+    .catch(showFetchError);
 }
 
 function countingTheNumberOfCountries(arr) {
@@ -33,6 +38,8 @@ function countingTheNumberOfCountries(arr) {
 }
 
 function renderCountriesList(arr) {
+  refs.countryList.innerHTML = '';
+
   const murkup = arr
     .map(el => {
       const { flags, name } = el;
@@ -46,6 +53,8 @@ function renderCountriesList(arr) {
 }
 
 function renderCountryInfo(arr) {
+  refs.infoOfCountry.innerHTML = '';
+
   const [{ capital, flags, name, languages, population }] = arr;
 
   const murkup = `<div>
@@ -63,5 +72,3 @@ function renderCountryInfo(arr) {
 function showFetchError(message) {
   Notiflix.Notify.failure(`${message}`);
 }
-
-
