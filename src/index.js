@@ -38,7 +38,7 @@ function countingTheNumberOfCountries(arr) {
 }
 
 function renderCountriesList(arr) {
-  refs.countryList.innerHTML = '';
+  refs.infoOfCountry.innerHTML = '';
 
   const murkup = arr
     .map(el => {
@@ -53,7 +53,7 @@ function renderCountriesList(arr) {
 }
 
 function renderCountryInfo(arr) {
-  refs.infoOfCountry.innerHTML = '';
+  refs.countryList.innerHTML = '';
 
   const [{ capital, flags, name, languages, population }] = arr;
 
