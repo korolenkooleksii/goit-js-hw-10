@@ -15,8 +15,8 @@ refs.input.addEventListener(
 function inputNameCountry(e) {
   let name = '';
   name = e.target.value.trim();
-  // refs.infoOfCountry.innerHTML = '';
-  // refs.countryList.innerHTML = '';
+  refs.infoOfCountry.innerHTML = '';
+  refs.countryList.innerHTML = '';
 
   if (name.length === 0) return;
 
